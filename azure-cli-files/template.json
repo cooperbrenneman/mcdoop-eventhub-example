@@ -1,0 +1,101 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "namespaces_mcdoop_eventhub_example_ns_name": {
+            "defaultValue": "mcdoop-eventhub-example-ns",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.EventHub/namespaces",
+            "apiVersion": "2018-01-01-preview",
+            "name": "[parameters('namespaces_mcdoop_eventhub_example_ns_name')]",
+            "location": "West US 2",
+            "sku": {
+                "name": "Basic",
+                "tier": "Basic",
+                "capacity": 1
+            },
+            "properties": {
+                "zoneRedundant": false,
+                "isAutoInflateEnabled": false,
+                "maximumThroughputUnits": 0,
+                "kafkaEnabled": false
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/AuthorizationRules",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_mcdoop_eventhub_example_ns_name'), '/RootManageSharedAccessKey')]",
+            "location": "West US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_mcdoop_eventhub_example_ns_name'))]"
+            ],
+            "properties": {
+                "rights": [
+                    "Listen",
+                    "Manage",
+                    "Send"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/eventhubs",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_mcdoop_eventhub_example_ns_name'), '/mcdoop-eventhub-example')]",
+            "location": "West US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_mcdoop_eventhub_example_ns_name'))]"
+            ],
+            "properties": {
+                "messageRetentionInDays": 1,
+                "partitionCount": 2,
+                "status": "Active"
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/networkRuleSets",
+            "apiVersion": "2018-01-01-preview",
+            "name": "[concat(parameters('namespaces_mcdoop_eventhub_example_ns_name'), '/default')]",
+            "location": "West US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_mcdoop_eventhub_example_ns_name'))]"
+            ],
+            "properties": {
+                "defaultAction": "Deny",
+                "virtualNetworkRules": [],
+                "ipRules": []
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/eventhubs/authorizationRules",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_mcdoop_eventhub_example_ns_name'), '/mcdoop-eventhub-example/SendAndListenPolicy')]",
+            "location": "West US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces/eventhubs', parameters('namespaces_mcdoop_eventhub_example_ns_name'), 'mcdoop-eventhub-example')]",
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_mcdoop_eventhub_example_ns_name'))]"
+            ],
+            "properties": {
+                "rights": [
+                    "Listen",
+                    "Send"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/eventhubs/consumergroups",
+            "apiVersion": "2017-04-01",
+            "name": "[concat(parameters('namespaces_mcdoop_eventhub_example_ns_name'), '/mcdoop-eventhub-example/$Default')]",
+            "location": "West US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces/eventhubs', parameters('namespaces_mcdoop_eventhub_example_ns_name'), 'mcdoop-eventhub-example')]",
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_mcdoop_eventhub_example_ns_name'))]"
+            ],
+            "properties": {}
+        }
+    ]
+}
