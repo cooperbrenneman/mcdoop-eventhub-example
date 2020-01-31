@@ -2,6 +2,10 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "storageAccounts_mcdoopstorage_name": {
+            "defaultValue": "mcdoopstorage",
+            "type": "String"
+        },
         "namespaces_mcdoop_eventhub_example_ns_name": {
             "defaultValue": "mcdoop-eventhub-example-ns",
             "type": "String"
@@ -24,6 +28,40 @@
                 "isAutoInflateEnabled": false,
                 "maximumThroughputUnits": 0,
                 "kafkaEnabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2019-06-01",
+            "name": "[parameters('storageAccounts_mcdoopstorage_name')]",
+            "location": "westus2",
+            "sku": {
+                "name": "Standard_RAGRS",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "Hot"
             }
         },
         {
@@ -57,17 +95,38 @@
             }
         },
         {
-            "type": "Microsoft.EventHub/namespaces/networkRuleSets",
-            "apiVersion": "2018-01-01-preview",
-            "name": "[concat(parameters('namespaces_mcdoop_eventhub_example_ns_name'), '/default')]",
-            "location": "West US 2",
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(parameters('storageAccounts_mcdoopstorage_name'), '/default')]",
             "dependsOn": [
-                "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_mcdoop_eventhub_example_ns_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mcdoopstorage_name'))]"
             ],
+            "sku": {
+                "name": "Standard_RAGRS"
+            },
             "properties": {
-                "defaultAction": "Deny",
-                "virtualNetworkRules": [],
-                "ipRules": []
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(parameters('storageAccounts_mcdoopstorage_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mcdoopstorage_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_RAGRS"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
             }
         },
         {
@@ -87,15 +146,16 @@
             }
         },
         {
-            "type": "Microsoft.EventHub/namespaces/eventhubs/consumergroups",
-            "apiVersion": "2017-04-01",
-            "name": "[concat(parameters('namespaces_mcdoop_eventhub_example_ns_name'), '/mcdoop-eventhub-example/$Default')]",
-            "location": "West US 2",
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "name": "[concat(parameters('storageAccounts_mcdoopstorage_name'), '/default/mcdoopprocessorcheckpoints')]",
             "dependsOn": [
-                "[resourceId('Microsoft.EventHub/namespaces/eventhubs', parameters('namespaces_mcdoop_eventhub_example_ns_name'), 'mcdoop-eventhub-example')]",
-                "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_mcdoop_eventhub_example_ns_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_mcdoopstorage_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_mcdoopstorage_name'))]"
             ],
-            "properties": {}
+            "properties": {
+                "publicAccess": "None"
+            }
         }
     ]
 }

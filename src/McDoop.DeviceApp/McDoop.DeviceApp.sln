@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29609.76
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "McDoop.DeviceApp.ConsoleApp", "McDoop.DeviceApp.ConsoleApp\McDoop.DeviceApp.ConsoleApp.csproj", "{59409F5C-AD40-45BE-85EC-A05084D6FBA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "McDoop.DeviceApp.ConsoleApp", "McDoop.DeviceApp.ConsoleApp\McDoop.DeviceApp.ConsoleApp.csproj", "{59409F5C-AD40-45BE-85EC-A05084D6FBA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "McDoop.EventHub.Sender", "McDoop.EventHub.Sender\McDoop.EventHub.Sender.csproj", "{C59033DB-8F3D-44FB-8EAF-359726823450}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "McDoop.EventHub.Sender", "McDoop.EventHub.Sender\McDoop.EventHub.Sender.csproj", "{C59033DB-8F3D-44FB-8EAF-359726823450}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "McDoop.DataReceiver.ConsoleApp", "McDoop.DataReceiver.ConsoleApp\McDoop.DataReceiver.ConsoleApp.csproj", "{A8E57D23-FC94-4CB0-A0EC-2CF0059DFB5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C59033DB-8F3D-44FB-8EAF-359726823450}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C59033DB-8F3D-44FB-8EAF-359726823450}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C59033DB-8F3D-44FB-8EAF-359726823450}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8E57D23-FC94-4CB0-A0EC-2CF0059DFB5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8E57D23-FC94-4CB0-A0EC-2CF0059DFB5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8E57D23-FC94-4CB0-A0EC-2CF0059DFB5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8E57D23-FC94-4CB0-A0EC-2CF0059DFB5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

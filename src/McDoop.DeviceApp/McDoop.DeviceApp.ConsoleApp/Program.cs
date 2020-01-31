@@ -4,7 +4,7 @@ namespace McDoop.DeviceApp.ConsoleApp
 {
     public class Program
     {
-        private static string EVENTHUB_CONNECTION_STRING = "";
+        private const string EVENTHUB_CONNECTION_STRING = "";
 
         static void Main(string[] args)
         {
